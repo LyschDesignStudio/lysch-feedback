@@ -1,10 +1,17 @@
 -- =====================================================================
--- schema.sql — banco completo da ferramenta de feedback (estado de 01/10/2026)
--- Rodar UMA vez no SQL Editor do projeto Supabase novo (ou com psql).
+-- Migração inicial: banco completo da ferramenta de feedback (estado de 01/10/2026).
+-- Aplicada sozinha pela integração GitHub do Supabase (ou rode uma vez no SQL Editor de um projeto vazio).
 -- Gerado a partir do banco em produção (pxmwnesytlwtdxcalmux): substitui as
--- migrações 001–020. Antes de rodar, troque NOVO_REF (1 lugar, na função
--- fb_notify_slack) pelo ref do projeto novo.
+-- migrações 001–020. O NOVO_REF (função fb_notify_slack) é trocado pelo
+-- scripts/configurar.mjs; não aplique antes de configurar.
 -- =====================================================================
+
+-- Trava: só aplica depois do scripts/configurar.mjs (que troca o endereço abaixo pelo do projeto)
+do $$ begin
+  if 'https://NOVO_REF.supabase.co/functions' like '%NOVO\_REF%' then
+    raise exception 'Rode  node scripts/configurar.mjs <ref> <chave publicável>  e faça push antes de aplicar esta migração';
+  end if;
+end $$;
 
 create extension if not exists pgcrypto;
 create extension if not exists pg_net;
@@ -323,7 +330,7 @@ begin
 end; $$;
 
 -- Aviso automático no Slack: chama a função "painel" (rota /hook) pelo pg_net
--- >>> TROQUE NOVO_REF pelo ref do projeto novo <<<
+-- (o endereço é ajustado pelo scripts/configurar.mjs)
 create or replace function public.fb_notify_slack() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
@@ -413,5 +420,5 @@ on conflict (id) do update set public = true, file_size_limit = 2097152, allowed
 -- Linha de administração. A chave de publicação começa com um valor aleatório
 -- (ninguém sabe): para usar fb_put_asset, grave o hash de uma chave sua.
 -- A senha da área de sugestões (?painel=sugestoes) fica vazia até ser definida.
-insert into public.fb_admin (id, upload_key_hash) values (1, encode(gen_random_bytes(32), 'hex'))
+insert into public.fb_admin (id, upload_key_hash) values (1, replace(gen_random_uuid()::text || gen_random_uuid()::text, '-', ''))
 on conflict (id) do nothing;

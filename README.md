@@ -33,10 +33,9 @@ scripts/
 feedback.config.json      URL do Supabase + chave publicável (públicas)
 vercel.json               build e repasses para o Supabase
 supabase/
-  schema.sql              banco completo (rodar uma vez num projeto novo)
-  config.toml             verify_jwt = false nas 4 funções
+  migrations/             banco (a primeira migração cria tudo)
+  config.toml             as 4 funções, com verify_jwt = false
   functions/              reviewer, painel (+ convites.ts), sugestoes, favicon
-.github/workflows/        opcional: publica as funções a cada push
 ```
 
 `src/` tem dois marcadores, `__SUPABASE_URL__` e `__SUPABASE_PUBLISHABLE_KEY__`, que o `build.mjs` troca pelos valores de `feedback.config.json`. Não troque à mão.
@@ -48,14 +47,23 @@ node scripts/configurar.mjs <ref do projeto> <chave publicável sb_publishable_.
 git add -A && git commit -m "Configura Supabase" && git push
 ```
 
-Isso grava `feedback.config.json` e ajusta os endereços em `vercel.json` e em `supabase/schema.sql`.
+Isso grava `feedback.config.json` e ajusta os endereços em `vercel.json` e nas migrações. A primeira migração tem uma trava: se for aplicada antes deste passo, ela para com um aviso e não cria nada.
 
 ## Mudanças no dia a dia
 
 - **Painel, tela de revisão ou snippet:** editar em `src/`, testar, push. A Vercel publica em ~1 minuto.
-- **API (Edge Functions):** editar em `supabase/functions/` e publicar com `npx supabase functions deploy --project-ref <ref>` (ou deixar o workflow do GitHub fazer, depois de cadastrar os secrets `SUPABASE_ACCESS_TOKEN` e `SUPABASE_PROJECT_REF`).
-- **Banco:** mudanças novas em SQL, aplicadas no Supabase (SQL Editor ou `supabase db`). Mantenha `supabase/schema.sql` atualizado.
+- **API (Edge Functions):** editar em `supabase/functions/` e fazer push. Com a integração do GitHub ligada (abaixo), o Supabase publica sozinho. Sem ela: `npx supabase functions deploy --project-ref <ref>`.
+- **Banco:** cada mudança vira um arquivo novo em `supabase/migrations/` (`AAAAMMDDHHMMSS_descricao.sql`). Com a integração ligada, o push aplica. Nunca edite uma migração que já foi aplicada.
 - **Build local:** `node scripts/build.mjs` gera `public/` (não vai para o Git).
+
+## Supabase pelo GitHub (deploy automático)
+
+No Supabase: **Project Settings → Integrations → GitHub Integration → Authorize GitHub**, escolher `LyschDesignStudio/lysch-feedback`, **Working directory** `.`, **Production branch** `main` e ligar **Deploy to production**. A partir daí, cada push na `main`:
+
+- aplica as migrações novas de `supabase/migrations/`;
+- publica as Edge Functions declaradas em `supabase/config.toml`.
+
+Funciona em qualquer plano. O resultado de cada deploy aparece no próprio commit no GitHub (o check do Supabase). Secrets e dados não passam pelo Git.
 
 ## Secrets das funções (Supabase → Edge Functions → Secrets)
 

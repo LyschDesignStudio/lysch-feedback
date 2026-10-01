@@ -1,6 +1,6 @@
 // Liga este repositório a um projeto Supabase (rodar uma vez, ou de novo para trocar de projeto):
 //   node scripts/configurar.mjs <ref do projeto> <chave publicável>
-// Grava feedback.config.json e atualiza os endereços do Supabase no vercel.json. Depois: commit + push.
+// Grava feedback.config.json e atualiza os endereços do Supabase no vercel.json e nas migrações. Depois: commit + push.
 // (A chave publicável é pública por natureza: ela já vai no JavaScript que o navegador baixa.)
 import fs from 'node:fs';
 import path from 'node:path';
@@ -16,6 +16,10 @@ fs.writeFileSync(path.join(root, 'feedback.config.json'), JSON.stringify({ supab
 const vp = path.join(root, 'vercel.json');
 const v = fs.readFileSync(vp, 'utf8').replace(/https:\/\/[A-Za-z0-9_]+\.supabase\.co/g, url);
 fs.writeFileSync(vp, v);
-const sql = path.join(root, 'supabase', 'schema.sql');
-if (fs.existsSync(sql)) fs.writeFileSync(sql, fs.readFileSync(sql, 'utf8').replace(/https:\/\/[A-Za-z0-9_]+\.supabase\.co\/functions/g, url + '/functions'));
+// endereço da função "painel" no aviso do Slack (migrações do banco)
+const walk = (d) => fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]) : [];
+for (const f of walk(path.join(root, 'supabase')).filter((f) => f.endsWith('.sql'))) {
+  const t = fs.readFileSync(f, 'utf8'), u = t.replace(/https:\/\/[A-Za-z0-9_]+\.supabase\.co\/functions/g, url + '/functions');
+  if (u !== t) fs.writeFileSync(f, u);
+}
 console.log('Configurado para ' + url + '. Agora: git add -A && git commit -m "Configura Supabase" && git push');
