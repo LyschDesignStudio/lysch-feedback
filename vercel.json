@@ -7,19 +7,19 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://NOVO_REF.supabase.co/functions/v1/reviewer/api/:path*"
+      "destination": "https://ipntwqtdbjpbgtlglznc.supabase.co/functions/v1/reviewer/api/:path*"
     },
     {
       "source": "/painel/api/:path*",
-      "destination": "https://NOVO_REF.supabase.co/functions/v1/painel/api/:path*"
+      "destination": "https://ipntwqtdbjpbgtlglznc.supabase.co/functions/v1/painel/api/:path*"
     },
     {
       "source": "/sugestoes/api/:path*",
-      "destination": "https://NOVO_REF.supabase.co/functions/v1/sugestoes/api/:path*"
+      "destination": "https://ipntwqtdbjpbgtlglznc.supabase.co/functions/v1/sugestoes/api/:path*"
     },
     {
       "source": "/favicon",
-      "destination": "https://NOVO_REF.supabase.co/functions/v1/favicon"
+      "destination": "https://ipntwqtdbjpbgtlglznc.supabase.co/functions/v1/favicon"
     }
   ],
   "headers": [

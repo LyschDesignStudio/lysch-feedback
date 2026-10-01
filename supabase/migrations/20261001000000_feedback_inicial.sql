@@ -8,7 +8,7 @@
 
 -- Trava: só aplica depois do scripts/configurar.mjs (que troca o endereço abaixo pelo do projeto)
 do $$ begin
-  if 'https://NOVO_REF.supabase.co/functions' like '%NOVO\_REF%' then
+  if 'https://ipntwqtdbjpbgtlglznc.supabase.co/functions' like '%NOVO\_REF%' then
     raise exception 'Rode  node scripts/configurar.mjs <ref> <chave publicável>  e faça push antes de aplicar esta migração';
   end if;
 end $$;
@@ -336,7 +336,7 @@ language plpgsql security definer set search_path = public as $$
 begin
   if exists (select 1 from fb_projects where id = new.project_id and slack_notify and slack_webhook is not null) then
     perform net.http_post(
-      url := 'https://NOVO_REF.supabase.co/functions/v1/painel/hook',
+      url := 'https://ipntwqtdbjpbgtlglznc.supabase.co/functions/v1/painel/hook',
       body := jsonb_build_object('kind', tg_argv[0], 'id', new.id),
       headers := '{"Content-Type": "application/json"}'::jsonb
     );
