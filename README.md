@@ -14,7 +14,7 @@ Ferramenta de revisão de sites (Webflow, Framer, sites de vibe coding): o clien
 | Snippet para os sites | `<script src="https://painel.exemplo.com/loader.js" data-studio="lysch" defer></script>` |
 | Painel dentro de um site com o snippet | `https://site-do-cliente.webflow.io/?painel` |
 
-O snippet vai no Footer code do Webflow (Site settings → Custom code) ou em "End of `<body>` tag" no Framer, e o site precisa ser publicado. Sites em `*.webflow.io`, `*.framer.app` e `*.framer.website` entram sozinhos no estúdio na primeira visita.
+Para instalar em vários sites de uma vez pelo Claude (conector do Webflow), use o prompt de [`docs/prompt-instalar-script.md`](docs/prompt-instalar-script.md). O snippet vai no Footer code do Webflow (Site settings → Custom code) ou em "End of `<body>` tag" no Framer, e o site precisa ser publicado. Sites em `*.webflow.io`, `*.framer.app` e `*.framer.website` entram sozinhos no estúdio na primeira visita.
 
 ## Estrutura
 
