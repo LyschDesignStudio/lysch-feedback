@@ -65,6 +65,15 @@ No Supabase: **Project Settings → Integrations → GitHub Integration → Auth
 
 Funciona em qualquer plano. O resultado de cada deploy aparece no próprio commit no GitHub (o check do Supabase). Secrets e dados não passam pelo Git.
 
+## Agente: `/resolver-feedback`
+
+No painel, **Resolver com Agente** coloca comentários na coluna **Com o agente**. A skill `/resolver-feedback` pega essa fila, aplica os ajustes no Webflow (sem publicar) e devolve cada card para **Para conferir** com uma nota. Ela sempre pergunta o projeto e mostra a lista de alterações antes de mexer em qualquer coisa.
+
+- **Claude Code:** a skill está em `.claude/skills/resolver-feedback/` e aparece sozinha ao abrir este repositório.
+- **App do Claude (claude.ai / desktop):** baixe a pasta `.claude/skills/resolver-feedback` como zip e envie em Configurações → Capabilities → Skills.
+- **Precisa de:** conector do Supabase com acesso ao projeto `ipntwqtdbjpbgtlglznc` e conector do Webflow com acesso aos sites.
+- Mudou a skill? Edite o `SKILL.md`, faça push e reenvie o zip no app.
+
 ## Secrets das funções (Supabase → Edge Functions → Secrets)
 
 | Secret | Para quê |
