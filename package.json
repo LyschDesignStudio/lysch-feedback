@@ -1,0 +1,11 @@
+{
+  "name": "feedback",
+  "private": true,
+  "type": "module",
+  "description": "Ferramenta de feedback em sites (Webflow, Framer, vibe coding): snippet, tela de revisão e painel do estúdio",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "configurar": "node scripts/configurar.mjs"
+  },
+  "engines": { "node": ">=18" }
+}

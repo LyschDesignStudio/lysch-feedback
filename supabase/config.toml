@@ -1,0 +1,14 @@
+# Só o necessário para "supabase functions deploy": todas as funções fazem a própria checagem de acesso.
+project_id = "feedback"
+
+[functions.reviewer]
+verify_jwt = false
+
+[functions.painel]
+verify_jwt = false
+
+[functions.sugestoes]
+verify_jwt = false
+
+[functions.favicon]
+verify_jwt = false
